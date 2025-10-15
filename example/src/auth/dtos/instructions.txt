@@ -1,0 +1,1 @@
+São as informações que serão consultadas em um postman ou thunderclient
