@@ -7,11 +7,12 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
     constructor(private readonly prismaService: PrismaService, private jwtService: JwtService) {}
+
     async signup(data: SignUpDTO) {
         const userAlreadyExists = await this.prismaService.user.findUnique({
             where: {
                 email: data.email,
-            }
+            },
         })
 
         if (userAlreadyExists){
@@ -51,12 +52,14 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        const accessToken = this.jwtService.signAsync({
+        const accessToken = await this.jwtService.signAsync({
             id: user.id,
             email: user.email,
             name: user.name
         })
 
-        return accessToken
+        return {
+            accessToken
+        }
     }
 }
